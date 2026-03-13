@@ -1,0 +1,169 @@
+{
+  "name": "githave-vscode",
+  "displayName": "Githave AI",
+  "description": "AI-powered coding assistant with intelligent chat, code analysis, and bubble hover diagnostics",
+  "version": "0.1.0",
+  "publisher": "zetazerohub",
+  "engines": {
+    "vscode": "^1.107.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Machine Learning",
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "githave-ai",
+          "title": "Githave AI",
+          "icon": "$(hubot)"
+        }
+      ]
+    },
+    "views": {
+      "githave-ai": [
+        {
+          "type": "webview",
+          "id": "githave-ai.chatView",
+          "name": "AI Chat"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "githave-ai.newChat",
+        "title": "Githave AI: New Chat",
+        "icon": "$(add)"
+      },
+      {
+        "command": "githave-ai.clearChat",
+        "title": "Githave AI: Clear Chat",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "githave-ai.toggleMode",
+        "title": "Githave AI: Toggle Act/Plan Mode"
+      },
+      {
+        "command": "githave-ai.buildIndex",
+        "title": "Githave AI: Build Code Index"
+      },
+      {
+        "command": "githave-ai.bubbleAnalyze",
+        "title": "Githave AI: Analyze with Bubble",
+        "enablement": "editorHasSelection || editorTextFocus"
+      },
+      {
+        "command": "githave-ai.sendToChat",
+        "title": "Githave AI: Send Selection to Chat"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "githave-ai.bubbleAnalyze",
+          "group": "githave@1",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "githave-ai.sendToChat",
+          "group": "githave@2",
+          "when": "editorHasSelection"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "githave-ai.newChat",
+          "when": "view == githave-ai.chatView",
+          "group": "navigation"
+        },
+        {
+          "command": "githave-ai.clearChat",
+          "when": "view == githave-ai.chatView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Githave AI",
+      "properties": {
+        "githave-ai.llm.provider": {
+          "type": "string",
+          "default": "dashscope",
+          "enum": ["dashscope", "openai", "ollama", "custom"],
+          "description": "LLM service provider"
+        },
+        "githave-ai.llm.apiEndpoint": {
+          "type": "string",
+          "default": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+          "description": "LLM API endpoint (OpenAI compatible)"
+        },
+        "githave-ai.llm.apiKey": {
+          "type": "string",
+          "default": "githave-omini",
+          "description": "LLM API key"
+        },
+        "githave-ai.llm.model": {
+          "type": "string",
+          "default": "qwen-plus",
+          "description": "LLM model name"
+        },
+        "githave-ai.llm.maxTokens": {
+          "type": "number",
+          "default": 4096,
+          "description": "Max tokens for LLM response"
+        },
+        "githave-ai.fm.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "FlashMemory server host"
+        },
+        "githave-ai.fm.port": {
+          "type": "number",
+          "default": 5532,
+          "description": "FlashMemory server port"
+        },
+        "githave-ai.fm.username": {
+          "type": "string",
+          "default": "",
+          "description": "FlashMemory Basic Auth username (optional)"
+        },
+        "githave-ai.fm.password": {
+          "type": "string",
+          "default": "",
+          "description": "FlashMemory Basic Auth password (optional)"
+        },
+        "githave-ai.chat.defaultMode": {
+          "type": "string",
+          "default": "act",
+          "enum": ["act", "plan"],
+          "description": "Default chat mode: act (direct execution) or plan (plan first)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.110.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "typescript-eslint": "^8.56.1",
+    "eslint": "^9.39.3",
+    "typescript": "^5.9.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
